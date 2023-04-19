@@ -1,0 +1,32 @@
+name: 'Lint action'
+description: 'Lint Ruby and JavaScript files'
+inputs:
+  ruby_version:
+    description: 'Ruby Version'
+    required: true
+  node_version:
+    description: 'Node Version'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - uses: actions/checkout@v3
+    with:
+      fetch-depth: 1
+  - uses: ruby/setup-ruby@v1
+    with:
+      ruby-version: ${{ inputs.ruby_version }}
+      bundler-cache: true
+  - uses: actions/setup-node@v3
+    with:
+      node-version: ${{ inputs.node_version }}
+  - name: Install JS dependencies
+    run: npm ci
+    shell: bash
+  - run: bundle exec rubocop -P
+    name: Lint Ruby files
+    shell: bash
+  - run: ./run_erblint.sh
+    name: Lint ERB files
+    shell: bash
