@@ -27,6 +27,8 @@ runs:
   - run: bundle exec rubocop -P
     name: Lint Ruby files
     shell: bash
-  - run: ./run_erblint.sh
+  - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+    shell: bash
+  - run: run_erblint.sh
     name: Lint ERB files
     shell: bash
