@@ -3,12 +3,10 @@ description: 'Lint Ruby and JavaScript files'
 inputs:
   ruby_version:
     description: 'Ruby Version'
-    required: true
-    default: ${{ env.RUBY_VERSION }}
+    required: false
   node_version:
     description: 'Node Version'
-    required: true
-    default: ${{ env.NODE_VERSION }}
+    required: false
 
 runs:
   using: "composite"
@@ -18,11 +16,11 @@ runs:
         fetch-depth: 1
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: ${{ inputs.ruby_version }}
+        ruby-version: ${{ inputs.ruby_version || env.RUBY_VERSION }}
         bundler-cache: true
     - uses: actions/setup-node@v3
       with:
-        node-version: ${{ inputs.node_version }}
+        node-version: ${{ inputs.node_version || env.NODE_VERSION }}
     - name: Install JS dependencies
       run: |
         if [ -f package-lock.json ]
