@@ -4,9 +4,11 @@ inputs:
   ruby_version:
     description: 'Ruby Version'
     required: true
+    default: ${{ env.RUBY_VERSION }}
   node_version:
     description: 'Node Version'
     required: true
+    default: ${{ env.NODE_VERSION }}
 
 runs:
   using: "composite"
