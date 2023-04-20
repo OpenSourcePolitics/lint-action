@@ -11,24 +11,30 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - uses: actions/checkout@v3
-    with:
-      fetch-depth: 1
-  - uses: ruby/setup-ruby@v1
-    with:
-      ruby-version: ${{ inputs.ruby_version }}
-      bundler-cache: true
-  - uses: actions/setup-node@v3
-    with:
-      node-version: ${{ inputs.node_version }}
-  - name: Install JS dependencies
-    run: npm ci
-    shell: bash
-  - run: bundle exec rubocop -P
-    name: Lint Ruby files
-    shell: bash
-  - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
-    shell: bash
-  - run: run_erblint.sh
-    name: Lint ERB files
-    shell: bash
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ inputs.ruby_version }}
+        bundler-cache: true
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node_version }}
+    - name: Install JS dependencies
+      run: |
+        if [ -f package-lock.json ]
+        then
+          npm ci
+        else
+          echo "No package-lock.json found, skipping npm ci"
+        fi
+      shell: bash
+    - run: bundle exec rubocop -P
+      name: Lint Ruby files
+      shell: bash
+    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+      shell: bash
+    - run: run_erblint.sh
+      name: Lint ERB files
+      shell: bash
