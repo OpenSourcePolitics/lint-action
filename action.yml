@@ -35,6 +35,12 @@ runs:
       shell: bash
     - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
       shell: bash
-    - run: run_erblint.sh
+    - run: |
+        if $(gem list -i "^erblint$");
+        then 
+          run_erblint.sh
+        else
+          echo "Erb lint not installed, skipping erblint"
+        fi
       name: Lint ERB files
       shell: bash
